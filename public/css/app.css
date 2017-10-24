@@ -1,0 +1,165 @@
+body {
+
+    background-color: #c9e2b3;
+    background: url('3148181508428008.png');
+    background-repeat: repeat-y;
+    background-size: 100%;
+}
+
+.navbar-nav-scroll {
+
+    height: 40px;
+}
+
+.navbar-nav li a {
+    color: white;
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.navbar-nav li a:hover {
+    color: blue;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+ul {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ul:after {
+    display: block;
+    content: ' ';
+    clear: both;
+    float: none;
+}
+ul.navbar-nav > li {
+    float: left;
+    padding-right: 5px;
+    position: relative;
+}
+ul.navbar-nav > li > a {
+    display: block;
+    padding: 10px;
+    color: white;
+    background-color: #3f51b5;
+    text-decoration: none;
+
+}
+ul.navbar-nav > li > a:hover {
+    background-color: #3fb4b5;
+}
+ul.submenu {
+    display: none;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    background-color: forestgreen;
+    border: 1px solid yellow;
+    width: 200px;
+}
+ul.submenu > li {
+    display: block;
+}
+ul.submenu > li > a {
+    display: block;
+    padding: 10px;
+    color: white;
+    background-color: #3f51b5;
+    text-decoration: none;
+}
+
+ul.submenu > li > a:hover {
+    color: orange;
+    text-decoration: none;
+}
+
+ul.navbar-nav > li:hover > ul.submenu {
+     display: block;
+ }
+
+.cat {
+   background-color: wheat;
+    width: 200px;
+    height: auto;
+    text-align: left;
+    font-size: 18px;
+    padding: 30px 30px 30px 30px;
+    color: darkblue;
+    margin-left: 700px;
+    
+}
+
+.cat a {
+
+    text-decoration: none;
+
+}
+.cat_title {
+    color: #003f80;
+    text-align: center;
+}
+.admin {
+    
+    text-align: center;
+    width: 50%;
+    height: auto;
+    border: 1px solid darkblue;
+    margin-top: 2% ;
+    margin-left: 26%;
+    background-color: rgb(186, 236, 227); 
+    padding: 20px; 
+    font-size: 22px;
+}
+
+.admin a {
+
+    text-decoration: none;
+
+}
+
+.main {
+
+    width: 75%;
+    height: auto;
+    min-height: 970px;
+    border: 1px solid;
+    margin-top: 2% ;
+    margin-left: 3%;
+    background-color: rgb(186, 236, 227); 
+    padding: 20px; 
+
+}
+
+.sidebar {
+
+    position: absolute;
+    width: 19%;
+    min-height: 970px;
+    height: auto;
+    border: 1px solid;
+    margin-top: 2%;
+    margin-left: 80%;
+    background-color: rgb(160, 187, 214); 
+
+}
+
+#kurs-com-ua-informer-main-ukraine-300x130-blue-container {
+
+    width: 30%;
+    color:blue;
+    margin-left: 8%;
+   
+}
+.content-sidebar {
+
+    margin-top: 5%;
+
+}
+.weather {
+
+    margin-left: 28%;
+
+}
