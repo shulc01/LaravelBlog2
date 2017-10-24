@@ -16,7 +16,7 @@ class AdminController extends Controller
 
     public $optionCategories;
 
-    public function showAdmin()
+    public function showAdmin() //
     {
 
         $articles = Article::with('category')->orderBy('updated_at', 'desc')->get();
