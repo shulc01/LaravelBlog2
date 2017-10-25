@@ -32,10 +32,6 @@ class ParseXMLController extends Controller
     		$r = Article::create($article);
     		
     	}
-
-dd($xml);
-
-
  
     }
 }
