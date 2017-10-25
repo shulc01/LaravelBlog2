@@ -36,6 +36,8 @@ Route::group(['prefix' => 'admin'], function()
 
 });
 
+Route::get('/parse', 'ParseXMLController@index');
+
 Route::get('articles', 'FrontController@showAllArticles')->name('ShowAllArticles');
 
 Route::get('article/{id}', 'FrontController@showArticle')->name('ShowArticle');

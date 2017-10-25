@@ -57,17 +57,27 @@ $('.sldr img:last').clone().prependTo('.sldr');$('.sldr img').eq(1).clone().appe
         <h3 align = "right">Category: <a href = "{{ route('ShowArticlesFromCategory', $category->id) }}"> {{ $category->name }} </a></h3>
         <h2 align = "center"><em>{{  $article->title }}</em></h2>
         <h4 align = "center">{{ $article->description }}</h4>
-        <div align = "center"><img align = "center" src = '{{ asset("/storage/images/". "$article->image") }}' width = "300" height = "300" border = "1" /></div>
-        <p align = "center">{{ $article->text }}</p>
 
-        @if(collect($articleImages)->isNotEmpty())
+        @if (substr($article->image, 0, 4) == 'http') 
+
+            <div align = "center"><img align = "center" src = '{{ $article->image }}' width = "300" height = "300" border = "1" /></div>
+            <p align = "center"><a href = "{{ $article->text }}">Текст</a></p>
+
+        @else
+
+            <div align = "center"><img align = "center" src = '{{ asset("/storage/images/". "$article->image") }}' width = "300" height = "300" border = "1" /></div>
+            <p align = "center">{{ $article->text }}</p>
+
+        @endif
+
+        @if (collect($articleImages)->isNotEmpty())
 
             <div class="sl_ctr">
                 <div class="sldr">
 
             @foreach($articleImages as $articleImage)
 
-                <img src = '{{ asset("/storage/images/". "$articleImage->name") }}' alt = "ff" width = "450" height = "400" border = "2"/>
+                <img src = '{{ asset("/storage/images/". "$articleImage->name") }}' width = "450" height = "400" border = "2"/>
 
             @endforeach
 

@@ -24,11 +24,21 @@
 
             <input type = "file" accept="image" name = "image" /><br/><br/>
 
-        @if (!empty($editArticle->image))    
+        @if (!empty($editArticle->image)) 
+
+            @if (substr($editArticle->image, 0, 4) == 'http')   
+
+              <!--   <a href = "{{ route('DeleteMainFotoArticle', [$editArticle->image,  $editArticle->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $editArticle->image }}?') ? true : false;" >X</a> -->
+
+                <img src = '{{ $editArticle->image }}' alt = "{{ $editArticle->image }}" width = "100" height = "100" border = "2"/><br/></br/>
+
+            @else
 
                 <a href = "{{ route('DeleteMainFotoArticle', [$editArticle->image,  $editArticle->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $editArticle->image }}?') ? true : false;" >X</a>
 
                 <img src = '{{ asset("/storage/images/". "$editArticle->image") }}' alt = "{{ $editArticle->image }}" width = "100" height = "100" border = "2"/><br/></br/>
+
+            @endif
           
         @endif
 
@@ -36,17 +46,17 @@
 
             <input type = "file" multiple = "multiple" accept="image" name = "images[]"  /><br/><br/>
 
-        @if (!empty($imagesEditArticle))
-
-            @foreach ($imagesEditArticle as $imageEditArticle)
+            @forelse ($imagesEditArticle as $imageEditArticle)
 
                 <a href = "{{ route('DeleteImagesArticle', [$imageEditArticle->id,  $editArticle->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $imageEditArticle->name }}?') ? true : false;" >X</a>
 
                 <img src = '{{ asset("/storage/images/". "$imageEditArticle->name") }}' alt = "{{ $imageEditArticle->name }}" width = "100" height = "100" border = "2"/>
 
-            @endforeach
+            @empty
 
-        @endif
+                <p>No images</p>
+
+            @endforelse
 
         <br/><br/>
 

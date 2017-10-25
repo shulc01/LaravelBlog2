@@ -16,13 +16,12 @@ class AdminController extends Controller
 
     public $optionCategories;
 
-    public function showAdmin() //
+    public function showAdmin() 
     {
 
         $articles = Article::with('category')->orderBy('updated_at', 'desc')->get();
 
         return view('adminShow')->with('allArticles', $articles);
-
     }
 
     public function outTree($listCategories, $parent_id, $level, $categoryIdArticle = false)
@@ -62,7 +61,6 @@ class AdminController extends Controller
 
     public function editArticle($id)
     {
-        //$articles1 = Article::where('id', $id)->with('category', 'tags')->get(); ???????????????/
 
         $editArticle = Article::find($id);
 
@@ -91,7 +89,6 @@ class AdminController extends Controller
                 $tagsArticle .= $tagEditArticle->name . '; ';
 
                 $tagsIdArticle[] = $tagEditArticle->id;
-
             }
 
             $data = [                   
@@ -160,14 +157,12 @@ class AdminController extends Controller
                 foreach ($filesNames as $fileName) {
 
                     $idImage[] = Image::insertGetId($fileName);
-
                 }
 
                 $article->images()->attach($idImage);
             } 
 
             return redirect('/admin');
-
         }
 
         if (!empty($customTags)) {
@@ -183,7 +178,6 @@ class AdminController extends Controller
                     $query->orWhere('name', $customTag);
 
                 }
-
             })->get();
 
             if (count($tagsIs) > 0) {  //isset tag in DB
@@ -209,7 +203,6 @@ class AdminController extends Controller
                     if ($tagsId == 0) break;
 
                     $idsTags[] = $tagsId;
-
                 }
             }
 
@@ -220,7 +213,6 @@ class AdminController extends Controller
                     $tags = ['name' => $customTag];
 
                     $idsTags[] = Tag::insertGetId($tags);
-
                 }
             }
 
@@ -229,7 +221,6 @@ class AdminController extends Controller
             foreach ($idsTags as $idTag) {
 
                 $articleTag[] = $idTag;
-
             }
 
             $article = Article::create($data);
@@ -241,7 +232,6 @@ class AdminController extends Controller
                 foreach ($filesNames as $fileName) {
 
                     $idImage[] = Image::insertGetId($fileName);
-
                 }
 
                 $article->images()->attach($idImage);
@@ -261,14 +251,12 @@ class AdminController extends Controller
                 foreach ($filesNames as $fileName) {
 
                     $idImage[] = Image::insertGetId($fileName);
-
                 }
 
                 $article->images()->attach($idImage);
             } 
 
             return redirect('/admin');
-
         }
 
     } // end storeArticle
@@ -282,9 +270,7 @@ class AdminController extends Controller
                 'text' => 'required|min:3',
              ]);
 
-        $data = $request->all();
-
-        unset($data['_token']);
+        $data = $request->except('_token');
 
         if (empty($data['image'])) {
 
@@ -346,7 +332,6 @@ class AdminController extends Controller
                 } 
 
             return redirect('/admin');
-
         }
 
         if (!empty($customTags)) {
@@ -367,7 +352,7 @@ class AdminController extends Controller
 
             })->get();
 
-            if (count($tagsIs) > 0) {  //isset tag in DB
+            if (collect($tagsIs)->count() > 0) {  //isset tag in DB
 
                  foreach($tagsIs as $value) {
 
