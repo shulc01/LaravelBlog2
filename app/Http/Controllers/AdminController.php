@@ -59,7 +59,7 @@ class AdminController extends Controller
         }
     }
 
-    public function editArticle($id)
+    public function editArticle($id) 
     {
 
         $editArticle = Article::find($id);
