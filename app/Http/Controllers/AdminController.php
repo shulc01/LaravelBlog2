@@ -66,6 +66,8 @@ class AdminController extends Controller
 
         $tagsEditArticle = $editArticle->tags;
 
+        dump($tagsEditArticle);
+
         $imagesEditArticle = $editArticle->images;
 
         $categories = Category::all()->toArray();
@@ -80,7 +82,17 @@ class AdminController extends Controller
 
         $tags = Tag::all();
 
+        $data = [
+            'editArticle' => $editArticle,
+            'categories' => $categories,
+            'tags' => $tags,
+            'imagesEditArticle' => $imagesEditArticle,
+            'optionCategories' => $this->optionCategories
+        ];
+
         if (collect($tagsEditArticle)->isNotEmpty()) {
+
+            dump(5555);
 
             $tagsArticle = '';
 
@@ -91,27 +103,14 @@ class AdminController extends Controller
                 $tagsIdArticle[] = $tagEditArticle->id;
             }
 
-            $data = [                   
-                    'editArticle' => $editArticle,
-                    'categories' => $categories,
-                    'tags' => $tags,
-                    'tagsArticle' => $tagsArticle,
-                    'tagsIdArticle' => $tagsIdArticle,
-                    'imagesEditArticle' => $imagesEditArticle,
-                    'optionCategories' => $this->optionCategories
-                    ];
+            $dataTags = [
+                'tagsArticle' => $tagsArticle,
+                'tagsIdArticle' => $tagsIdArticle,
+            ];
 
-            return view('editArticle')->with($data);
+            $data = array_merge($data, $dataTags);
 
         }
-
-        $data = [
-                'editArticle' => $editArticle,
-                'categories' => $categories,
-                'tags' => $tags,
-                'imagesEditArticle' => $imagesEditArticle,
-                'optionCategories' => $this->optionCategories
-                ];
 
         return view('editArticle')->with($data);
     }
@@ -127,7 +126,7 @@ class AdminController extends Controller
              ]);
 
         $data = $request->all();
-
+        $fileName = Image::store($file);
         $mainFoto = 'm_' . rand(1, 999999) . time() . '.' . $data['image']->getClientOriginalExtension();
         $data['image']->move(public_path('/storage/images/'), $mainFoto);
         $data['image'] = $mainFoto;

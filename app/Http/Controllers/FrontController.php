@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
-use App\Models\Image;
-
 use Illuminate\Support\Facades\View;
 
 class FrontController extends Controller
@@ -26,13 +24,14 @@ class FrontController extends Controller
             $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
 
         }
-        
+
         $this->outTree($listCategories, 0, 0);
 
         $data = [
-                'lastArticles' => $lastArticles,
-                'allCategories' => $this->optionCategories
-                ];
+            'lastArticles' => $lastArticles,
+            'allCategories' => $this->optionCategories,
+
+        ];
 
         View::share($data);
 
@@ -73,10 +72,12 @@ class FrontController extends Controller
         return view('page')->with('articles', $articles);
 
     }
+
     public function showArticle($id)
     {
 
         $article = Article::find($id);
+
 
         $category = $article->category;
 
@@ -109,11 +110,13 @@ class FrontController extends Controller
 
         $categoryName = $category->name;
 
-        $articlesFromCategory = $category->articles()->orderBy('updated_at', 'desc')->get();
+        $articles = $category->articles()
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         $data = [
-                'categoryName' => $categoryName,
-                'articles' => $articlesFromCategory
+                'categoryName' => $category->name,
+                'articles' => $articles
                 ];
 
             return view('page')->with($data);
@@ -147,4 +150,4 @@ class FrontController extends Controller
 
     }
 
-} //end MyController
+}
