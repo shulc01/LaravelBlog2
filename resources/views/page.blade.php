@@ -11,12 +11,20 @@
         {{ isset($tagName) ? 'Тэг #' . $tagName : ''  }}<br/>
 
             @foreach ($articles as $article)
+
+                @if (substr($article->image, 0, 4) == 'http') 
+
+                        <div align = "center" style ="float: left; margin: 10px 0px 0px 50px;"><img align = "center" src = '{{ $article->image }}' 
+                            width = "100" height = "100" border = "2" />
+                        </div>
+
+                @else
             
-                <div align = "center" style ="float: left; margin: 10px 0px 0px 50px;"><img align = "center" src = '{{ asset("/storage/images/". "$article->image") }}'
+                    <div align = "center" style ="float: left; margin: 10px 0px 0px 50px;"><img align = "center" src = '{{ asset("/storage/images/". "$article->image") }}'
+                        alt = "no image" width = "100" height = "100" border = "2"/>
+                    </div>
 
-                    alt = "no image" width = "100" height = "100" border = "2"/>
-
-                </div>
+                @endif
 
                 <div style = "margin-left: 185px;">
 

@@ -7,22 +7,43 @@ use App\Models\Article;
 
 class ParseXMLController extends Controller
 {
-    public function index() {
+    public function index($idParseContent) {
 
-    	$url = 'http://news.liga.net/sport/rss.xml';
-		//$url2 = 'https://www.sport-express.ru/services/materials/news/football/se/';
+    	switch ($idParseContent) {
+
+    		case 1:
+    			$url = 'http://news.liga.net/sport/rss.xml';
+    			break;
+    		case 2:
+    			$url = 'https://www.rbc.ua/static/rss/ukrnet.sport.rus.rss.xml';
+    			break;
+
+    	}
 
     	$xml = simplexml_load_file($url);
 
     	$countArticle = count($xml->channel->item);
 
+    	$xmlChannelItem = $xml->channel->item;
+
     	for ($i = 0; $i < $countArticle; $i++) {
 
-    		$data[$i]['title'] = (string) $xml->channel->item[$i]->title;
-    		$data[$i]['description'] = (string) $xml->channel->item[$i]->description;
-    		$data[$i]['text'] = (string) $value->item[$i]->link;
-    		$data[$i]['image'] = (string) $value->item[$i]->enclosure['url'];
-    		$data[$i]['created_at'] = date_format(  date_create((string)$value->item[$i]->pubDate), 'Y-m-d H:i:s');
+    		$data[$i]['title'] = (string) $xmlChannelItem[$i]->title;
+    		$data[$i]['description'] = (string) $xmlChannelItem[$i]->description;
+    		
+
+    		if (!empty ($xml->channel->item[$i]->fulltext)) {
+
+    			$data[$i]['text'] = (string) $xmlChannelItem[$i]->fulltext;
+
+    		} else {
+
+    			$data[$i]['text'] = (string) $xmlChannelItem[$i]->link;
+
+    		}
+
+    		$data[$i]['image'] = (string) $xmlChannelItem[$i]->enclosure['url'];
+    		$data[$i]['updated_at'] = date_format(  date_create((string) $xmlChannelItem[$i]->pubDate), 'Y-m-d H:i:s');
 
     	}
 
@@ -32,6 +53,7 @@ class ParseXMLController extends Controller
     		$r = Article::create($article);
     		
     	}
- 
+
+    	return redirect('admin');
     }
 }

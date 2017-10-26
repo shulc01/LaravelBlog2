@@ -19,7 +19,7 @@ class AdminController extends Controller
     public function showAdmin() 
     {
 
-        $articles = Article::with('category')->orderBy('updated_at', 'desc')->get();
+        $articles = Article::with('category')->orderBy('created_at', 'desc')->get();
 
         return view('adminShow')->with('allArticles', $articles);
     }
@@ -180,7 +180,7 @@ class AdminController extends Controller
                 }
             })->get();
 
-            if (count($tagsIs) > 0) {  //isset tag in DB
+            if (collect($tagsIs)->count() > 0) {   //isset tag in DB
 
                  foreach ($tagsIs as $tagIs) {
 

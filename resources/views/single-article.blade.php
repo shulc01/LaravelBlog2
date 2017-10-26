@@ -58,15 +58,21 @@ $('.sldr img:last').clone().prependTo('.sldr');$('.sldr img').eq(1).clone().appe
         <h2 align = "center"><em>{{  $article->title }}</em></h2>
         <h4 align = "center">{{ $article->description }}</h4>
 
-        @if (substr($article->image, 0, 4) == 'http') 
+        @if (substr($article->image, 0, 4) == 'http' && substr($article->text, 0, 4) != 'http') 
+
+            <div align = "center"><img align = "center" src = '{{ $article->image }}' width = "300" height = "300" border = "1" /></div>
+            <p align = "center">{!! $article->text !!}</p>
+
+        @elseif (substr($article->image, 0, 4) == 'http' && substr($article->text, 0, 4) == 'http')
 
             <div align = "center"><img align = "center" src = '{{ $article->image }}' width = "300" height = "300" border = "1" /></div>
             <p align = "center"><a href = "{{ $article->text }}">Текст</a></p>
 
-        @else
+
+        @else 
 
             <div align = "center"><img align = "center" src = '{{ asset("/storage/images/". "$article->image") }}' width = "300" height = "300" border = "1" /></div>
-            <p align = "center">{{ $article->text }}</p>
+            <p align = "center">{!! $article->text !!}</p>
 
         @endif
 
