@@ -64,12 +64,12 @@ class FrontController extends Controller
         }
     }
 
-    public function showAllArticles()
+    public function showArticles()
     {
 
         $articles = Article::all()->sortByDesc('updated_at');
 
-        return view('page')->with('articles', $articles);
+        return view('allArticles')->with('articles', $articles);
 
     }
 
@@ -80,14 +80,14 @@ class FrontController extends Controller
         $article->category;
         $article->images;
 
-        return view('single-article')->with('article', $article);
+        return view('showArticle')->with('article', $article);
 
     }
 
-    public function showAllCategories()
+    public function showCategories()
     {
 
-        return view('show-cat');
+        return view('showCategories');
 
     }
 
@@ -106,7 +106,7 @@ class FrontController extends Controller
             'articles' => $articles
         ];
 
-        return view('page')->with($data);
+        return view('allArticles')->with($data);
 
     }
 

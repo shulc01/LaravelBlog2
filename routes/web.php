@@ -41,11 +41,11 @@ Route::get('/parse/{idParseContent}', 'ParseXMLController@index');
 Route::get('/test', 'ParseXMLController@test');
 
 
-Route::get('articles', 'FrontController@showAllArticles')->name('ShowAllArticles');
+Route::get('articles', 'FrontController@showArticles')->name('ShowAllArticles');
 
 Route::get('article/{id}', 'FrontController@showArticle')->name('ShowArticle');
 
-Route::get('categories', 'FrontController@showAllCategories')->name('ShowAllCategories');
+Route::get('categories', 'FrontController@showCategories')->name('ShowAllCategories');
 
 Route::get('category/{id}', 'FrontController@showArticlesFromCategory')->name('ShowArticlesFromCategory');
 

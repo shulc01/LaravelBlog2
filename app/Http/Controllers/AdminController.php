@@ -87,44 +87,34 @@ class AdminController extends Controller
     public function storeArticle(Request $request) 
     {
 
-        $data = $request->validate ([
+        $this->validate($request, [
             'title' => 'required|min:3',
             'description' => 'required|min:3',
             'image' => 'required|',
             'text' => 'required|min:3'
         ]);
 
-        //$fileName = Image::store($file);
-        $mainFoto = 'm_' . rand(1, 999999) . time() . '.' . $data['image']->getClientOriginalExtension();
-        $data['image']->move(public_path('/storage/images/'), $mainFoto);
-        $data['image'] = $mainFoto;
+        $data = $request->except('_token');
+
+        $data['image'] = Image::store($data['image']);
+
+        $article = Article::create($data);
 
         if (!empty($data['images'])) {
 
-            $files = $data['images'];
+            foreach ($data['images'] as $image) {
 
-            foreach ($files as $file) {
+                $fileName = ['name' => Image::store($image)];
 
-                $fileName = rand(1, 999999) . time() . '.' . $file->getClientOriginalExtension();
-                $filesNames[] = ['name' => $fileName];
-                $file->move(public_path('/storage/images/'), $fileName);
+                $idImage[] = Image::insertGetId($fileName);
+
             }
-        } 
-        unset($data['images']);
 
-            $article = Article::create($data);
+            $article->images()->attach($idImage);
+        }
 
-            if (!empty($filesNames)) {
 
-                foreach ($filesNames as $fileName) {
-
-                    $idImage[] = Image::insertGetId($fileName);
-                }
-
-                $article->images()->attach($idImage);
-            } 
-
-            return redirect('/admin');
+        return redirect('/admin');
 
     }
 
@@ -140,46 +130,23 @@ class AdminController extends Controller
         $data = $request->except('_token', 'title', 'description', 'text');
         $data = array_merge($dataValidate, $data);
 
-        if (empty($data['image'])) {
+        empty($data['image']) ? $data['image'] = $data['mainImage'] : $data['image'] = Image::store($data['image']);
 
-            $data['image'] = $data['mainImage'];
+        $articleId = $data['id'];
 
-        } else {
-
-            $mainFoto = 'm_' . rand(1, 999999) . time() . '.' . $data['image']->getClientOriginalExtension();
-            $data['image']->move(public_path('/storage/images/'), $mainFoto);
-            $data['image'] = $mainFoto;
-        } 
-
-        unset ($data['mainImage']);
+        Article::find($articleId)->update($data);
 
         if (!empty($data['images'])) {
 
-            $files = $data['images'];
+            foreach ($data['images'] as $image) {
 
-            foreach ($files as $file) {
-
-                $fileName = rand(1, 999999) . time() . '.' . $file->getClientOriginalExtension();
-                $filesNames[] = ['name' => $fileName];
-                $file->move(public_path('/storage/images/'), $fileName);
-            }
-        }
-
-        unset($data['images']);
-
-        $idEditArticle = $data['id'];
-
-        Article::find($idEditArticle)->update($data);
-
-        if (!empty($filesNames)) {
-
-            foreach ($filesNames as $fileName) {
+                $fileName = ['name' => Image::store($image)];
 
                 $idImage[] = Image::insertGetId($fileName);
 
             }
 
-            $article = Article::find($idEditArticle)->images()->attach($idImage);
+            Article::find($articleId)->images()->attach($idImage);
         }
 
         return redirect('/admin');
@@ -263,11 +230,11 @@ class AdminController extends Controller
     public function saveCategory(Request $request)
     {
 
-        $this->validate($request,
-                        ['name' => 'required|min:3',
-                         'description' => 'required|min:3',
-                         'parent_id' => 'required'
-                        ]);
+        $this->validate($request, [
+            'name' => 'required|min:3',
+            'description' => 'required|min:3',
+            'parent_id' => 'required'
+        ]);
 
         $data = $request->all(); 
 
