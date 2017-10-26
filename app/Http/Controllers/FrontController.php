@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Tag;
 use Illuminate\Support\Facades\View;
 
 class FrontController extends Controller
@@ -78,17 +77,13 @@ class FrontController extends Controller
 
         $article = Article::find($id);
 
-
         $category = $article->category;
-
-        $articleTags = $article->tags;
 
         $articleImages = $article->images;
         
             $data = [
                     'article' => $article,
                     'category' => $category,
-                    'articleTags' => $articleTags,
                     'articleImages' => $articleImages
                     ];
 
@@ -129,24 +124,6 @@ class FrontController extends Controller
         Category::find($id)->delete();
 
         return redirect('/categories');
-
-    }
-
-    public function showArticleWithTags($id)
-    {
-
-        $tag = Tag::find($id);
-
-        $tagName = $tag->name;
-
-        $articlesWithTags = $tag->articles()->orderBy('updated_at', 'desc')->get();
-
-        $data = [
-                'articles' => $articlesWithTags,
-                'tagName' => $tagName
-                ];
-
-        return view('page')->with($data);
 
     }
 

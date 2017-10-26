@@ -94,16 +94,6 @@ $('.sldr img:last').clone().prependTo('.sldr');$('.sldr img').eq(1).clone().appe
 
         @endif
 
-        @isset ($articleTags)
-
-            @foreach($articleTags as $articleTag)
-
-                <a href = "{{ route('ShowArticleWithTags', $articleTag->id) }}" > #{{ $articleTag->name }}</a>
-
-            @endforeach
-
-        @endisset
-
 </div>
 
 @endsection

@@ -8,8 +8,6 @@
 
     @if (collect($articles)->isNotEmpty())
 
-        {{ isset($tagName) ? 'Тэг #' . $tagName : ''  }}<br/>
-
             @foreach ($articles as $article)
 
                 @if (substr($article->image, 0, 4) == 'http') 

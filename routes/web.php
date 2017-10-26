@@ -14,7 +14,7 @@
 Route::group(['prefix' => 'admin'], function()
 {
 
-    Route::get('/', 'AdminController@showAdmin')->name('Admin');
+    Route::get('/', 'AdminController@index')->name('Admin');
 
     Route::get('new-article', 'AdminController@createArticle')->name('CreateArticle');
 
@@ -48,8 +48,6 @@ Route::get('article/{id}', 'FrontController@showArticle')->name('ShowArticle');
 Route::get('categories', 'FrontController@showAllCategories')->name('ShowAllCategories');
 
 Route::get('category/{id}', 'FrontController@showArticlesFromCategory')->name('ShowArticlesFromCategory');
-
-Route::get('tags/{id}', 'FrontController@showArticleWithTags')->name('ShowArticleWithTags');
 
 Route::delete('categories/{id}', 'FrontController@deleteCategory')->name('DeleteCategory');
 

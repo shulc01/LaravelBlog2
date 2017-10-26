@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Tag;
-use App\Models\Art_Tag;
 use App\Models\Image;
 use App\Models\Article_Image;
 use Illuminate\Http\Request;
@@ -16,7 +14,7 @@ class AdminController extends Controller
 
     public $optionCategories;
 
-    public function showAdmin() 
+    public function index()
     {
 
         $articles = Article::with('category')->orderBy('created_at', 'desc')->get();
@@ -64,8 +62,6 @@ class AdminController extends Controller
 
         $editArticle = Article::find($id);
 
-        $tagsEditArticle = $editArticle->tags;
-
         $imagesEditArticle = $editArticle->images;
 
         $categories = Category::all()->toArray();
@@ -78,35 +74,12 @@ class AdminController extends Controller
         
         $this->outTree($listcategories, 0, 0, $editArticle->category_id);
 
-        $tags = Tag::all();
-
         $data = [
             'editArticle' => $editArticle,
             'categories' => $categories,
-            'tags' => $tags,
             'imagesEditArticle' => $imagesEditArticle,
             'optionCategories' => $this->optionCategories
         ];
-
-        if (collect($tagsEditArticle)->isNotEmpty()) {
-
-            $tagsArticle = '';
-
-            foreach ($tagsEditArticle as $tagEditArticle) {
-
-                $tagsArticle .= $tagEditArticle->name . '; ';
-
-                $tagsIdArticle[] = $tagEditArticle->id;
-            }
-
-            $dataTags = [
-                'tagsArticle' => $tagsArticle,
-                'tagsIdArticle' => $tagsIdArticle,
-            ];
-
-            $data = array_merge($data, $dataTags);
-
-        }
 
         return view('editArticle')->with($data);
     }
@@ -140,11 +113,6 @@ class AdminController extends Controller
         } 
         unset($data['images']);
 
-        if (!empty($data['custom_tags'])) $customTags = $data['custom_tags'];
-        if (!empty($data['tags_id'])) $tagsFromDB = $data['tags_id'];
-
-        if (empty($customTags) && ((empty($tagsFromDB)) || $tagsFromDB[0] == 0)) { //no tags or selected 'no tags'
-
             $article = Article::create($data);
 
             if (!empty($filesNames)) {
@@ -158,103 +126,8 @@ class AdminController extends Controller
             } 
 
             return redirect('/admin');
-        }
 
-        if (!empty($customTags)) {
-
-            $customTags = explode(';', mb_strtolower($customTags));
-
-            $customTags = array_unique(array_diff(array_map('trim', $customTags), ['', 0, null]));
-
-            $tagsIs = Tag::where(function ($query) use ($customTags) {
-
-                foreach($customTags as $customTag){
-
-                    $query->orWhere('name', $customTag);
-
-                }
-            })->get();
-
-            if (collect($tagsIs)->count() > 0) {   //isset tag in DB
-
-                 foreach ($tagsIs as $tagIs) {
-
-                    foreach ($customTags as $key => $customTag) {
-
-                        if ($tagIs->name == $customTag) { 
-
-                            unset($customTags[$key]);
-
-                            $idsTags[] = $tagIs->id;
-                        }      
-                    }
-                } 
-            }
-
-            if (!empty($tagsFromDB)) { 
-
-                foreach ($tagsFromDB as $tagsId) {
-
-                    if ($tagsId == 0) break;
-
-                    $idsTags[] = $tagsId;
-                }
-            }
-
-            if (!empty($customTags)) {   //if really new tags
-
-                foreach ($customTags as $customTag) {
-
-                    $tags = ['name' => $customTag];
-
-                    $idsTags[] = Tag::insertGetId($tags);
-                }
-            }
-
-            $idsTags = array_unique($idsTags);
-
-            foreach ($idsTags as $idTag) {
-
-                $articleTag[] = $idTag;
-            }
-
-            $article = Article::create($data);
-
-            $article->tags()->attach($articleTag);
-
-            if (!empty($filesNames)) {
-
-                foreach ($filesNames as $fileName) {
-
-                    $idImage[] = Image::insertGetId($fileName);
-                }
-
-                $article->images()->attach($idImage);
-            } 
-
-            return redirect('/admin');
-        }
-
-        if ($tagsFromDB) {
-
-            $article = Article::create($data);
-
-            $article->tags()->attach($tagsFromDB);
-
-            if (!empty($filesNames)) {
-
-                foreach ($filesNames as $fileName) {
-
-                    $idImage[] = Image::insertGetId($fileName);
-                }
-
-                $article->images()->attach($idImage);
-            } 
-
-            return redirect('/admin');
-        }
-
-    } // end storeArticle
+    }
 
     public function updateArticle(Request $request)
     {
@@ -293,25 +166,7 @@ class AdminController extends Controller
         } 
         unset($data['images']);
 
-        if (!empty($data['custom_tags'])) {
-            
-            $customTags = $data['custom_tags'];
-            
-        }   
-
-        unset($data['custom_tags']);
-
-        if ( (!empty($data['tags_id']) && $data['tags_id'][0] == 0) || !empty($data['tags_id']) ) {
-
-            $tagsFromDB = $data['tags_id'];
-            unset($data['tags_id']);
-        }
-
         $idEditArticle = $data['id'];
-
-        if (empty($customTags) && ( (empty($tagsFromDB)) || $tagsFromDB[0] == 0) ) { //no tags or selected 'no tags'
-
-            $deleteArticleTags = Art_Tag::where('article_id', $idEditArticle)->delete();
 
             Article::where('id', $idEditArticle)->update($data);
 
@@ -324,118 +179,12 @@ class AdminController extends Controller
                     }
 
                     $article = Article::find($idEditArticle)->images()->attach($idImage);
-                } 
-
-            return redirect('/admin');
-        }
-
-        if (!empty($customTags)) {
-
-            $customTags = explode(';', mb_strtolower($customTags));
-
-            $customTags = array_unique(array_diff(array_map('trim', $customTags), ['', 0, null]));
-
-            Article::where('id', $idEditArticle)->update($data);
-
-            $tagsIs = Tag::where(function ($query) use ($customTags) {
-
-                foreach($customTags as $customTag){
-
-                    $query->orWhere('name', $customTag);
-
                 }
-
-            })->get();
-
-            if (collect($tagsIs)->count() > 0) {  //isset tag in DB
-
-                 foreach($tagsIs as $value) {
-
-                    foreach ($customTags as $key => $customTag) {
-
-                        if ($value->name == $customTag) { 
-
-                            unset($customTags[$key]);
-
-                            $idsTags[] = $value->id;
-                        }      
-                    }
-                } 
-            }
-
-            if (!empty($tagsFromDB)) {
-
-                foreach ($tagsFromDB as $tagsId) {
-
-                    if ($tagsId == 0) break;
-
-                    $idsTags[] = $tagsId;
-
-                }
-            }
-
-            if (!empty($customTags)) {
-
-                foreach ($customTags as $customTag) {
-
-                    $tags = ['name' => $customTag];
-
-                    $idsTags[] = Tag::insertGetId($tags);
-
-                }
-            }
-
-            $idsTags = array_unique($idsTags);
-
-            $deleteArticleTags = Art_Tag::where('article_id', $idEditArticle)->delete();
-
-            foreach ($idsTags as $idTag) {
-
-                 $articleTag[] = ['article_id' => $idEditArticle, 'tag_id' => $idTag];
-
-            }
-
-            $saveArticleTags = Art_Tag::insert($articleTag);
-
-            if (!empty($filesNames)) {
-
-                foreach ($filesNames as $fileName) {
-
-                    $idImage[] = Image::insertGetId($fileName);
-
-                }
-
-                $article = Article::find($idEditArticle)->images()->attach($idImage);
-            } 
-
-            return redirect('/admin');
-        }
-
-        if ($tagsFromDB) {
-
-            $deleteArticleTags = Art_Tag::where('article_id', $idEditArticle)->delete(); 
-
-            $article = Article::find($idEditArticle);
-            $article->fill($data);
-            $article->tags()->attach($tagsFromDB);
-            $article->save();
-
-            if (!empty($filesNames)) {
-
-                foreach ($filesNames as $fileName) {
-
-                    $idImage[] = Image::insertGetId($fileName);
-
-                }
-
-                $article->images()->attach($idImage);
-            } 
 
             return redirect('/admin');
 
-        }
+    }
 
-    } //end function saveArticle
 
     public function createArticle()
     {
@@ -450,10 +199,7 @@ class AdminController extends Controller
         
         $this->outTree($listcategories, 0, 0);
 
-        $tags = Tag::all();
-
         $data = [
-                'tags' => $tags,
                 'optionCategories' => trim($this->optionCategories)
                 ];
 
@@ -532,4 +278,4 @@ class AdminController extends Controller
         return redirect('/admin');
     }
 
-} //end class AdmiController
+}

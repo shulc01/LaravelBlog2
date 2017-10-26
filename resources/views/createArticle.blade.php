@@ -36,26 +36,6 @@
 
         </select><br/><br/>
 
-        <b>Tags</b><br/>
-
-        <select name = "tags_id[]" multiple size = "10">
-
-            <option value = "0">No tags</option>
-
-            @foreach ($tags as $tag)
-
-                <option value = "{{ $tag->id }}"> {{ $tag->name }} </option>
-
-            @endforeach
-
-        </select>
-
-        <br/><br/>
-
-        <b>Add new tags (separated semicolon)</b><br/>
-
-        <input class = "input-mini " size = "100" type="text" name="custom_tags" placeholder = "For example: sport;car;music;" /><br/><br/>
-
         <input type = "submit" value = "Save"/>
 
         {{ csrf_field() }}

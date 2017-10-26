@@ -68,43 +68,6 @@
 
         </select><br/><br/>
 
-        <b>Tags</b><br/>
-
-        <select name = "tags_id[]" multiple size = "10">
-
-            <option value = "0">No tag</option>
-
-            @foreach ($tags as $tag)
-
-                <option value = "{{ $tag->id }}"
-
-                        @isset ($tagsIdArticle)
-
-                            @foreach ($tagsIdArticle as $tagIdArticle)
-
-                                @if ($tag->id == $tagIdArticle) 
-
-                                    selected
-
-                                @endif
-
-                            @endforeach
-
-                        @endisset >
-
-                    {{ $tag->name }}
-
-                </option>
-
-            @endforeach
-
-        </select>
-
-        <br/><br/>
-        <b>Tags or add new tags (separated semicolon)</b><br/>
-
-        <input class = "input-mini " size = "100" type="text" name="custom_tags" placeholder = "For example: sport;car;music;" value="{{ $tagsArticle ?? ''}}"/><br/><br/>
-
         <input type="hidden" name = "id" value = "{{ $editArticle->id }}"/>
 
         <input type="hidden" name = "mainImage" value = "{{ $editArticle->image }}"/>
