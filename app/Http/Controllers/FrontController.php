@@ -14,7 +14,9 @@ class FrontController extends Controller
     public function __construct()
     {
 
-        $lastArticles = Article::limit(5)->orderBy('updated_at', 'desc')->get();
+        $lastArticles = Article::limit(5)
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         $categories = Category::all()->toArray();
 
@@ -29,7 +31,6 @@ class FrontController extends Controller
         $data = [
             'lastArticles' => $lastArticles,
             'allCategories' => $this->optionCategories,
-
         ];
 
         View::share($data);
@@ -76,18 +77,10 @@ class FrontController extends Controller
     {
 
         $article = Article::find($id);
+        $article->category;
+        $article->images;
 
-        $category = $article->category;
-
-        $articleImages = $article->images;
-        
-            $data = [
-                    'article' => $article,
-                    'category' => $category,
-                    'articleImages' => $articleImages
-                    ];
-
-        return view('single-article')->with($data);
+        return view('single-article')->with('article', $article);
 
     }
 
@@ -103,18 +96,17 @@ class FrontController extends Controller
 
         $category = Category::find($id);
 
-        $categoryName = $category->name;
-
-        $articles = $category->articles()
+        $articles = $category
+            ->articles()
             ->orderBy('updated_at', 'desc')
             ->get();
 
         $data = [
-                'categoryName' => $category->name,
-                'articles' => $articles
-                ];
+            'category' => $category->name,
+            'articles' => $articles
+        ];
 
-            return view('page')->with($data);
+        return view('page')->with($data);
 
     }
 

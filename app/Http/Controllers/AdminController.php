@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Article_Image;
 use App\Models\Category;
 use App\Models\Image;
-use App\Models\Article_Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {   
@@ -17,7 +16,9 @@ class AdminController extends Controller
     public function index()
     {
 
-        $articles = Article::with('category')->orderBy('created_at', 'desc')->get();
+        $articles = Article::with('category')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('adminShow')->with('allArticles', $articles);
     }
@@ -60,9 +61,9 @@ class AdminController extends Controller
     public function editArticle($id) 
     {
 
-        $editArticle = Article::find($id);
+        $article = Article::find($id);
 
-        $imagesEditArticle = $editArticle->images;
+        $article->images;
 
         $categories = Category::all()->toArray();
 
@@ -72,12 +73,11 @@ class AdminController extends Controller
 
         }
         
-        $this->outTree($listcategories, 0, 0, $editArticle->category_id);
+        $this->outTree($listcategories, 0, 0, $article->category_id);
 
         $data = [
-            'editArticle' => $editArticle,
+            'article' => $article,
             'categories' => $categories,
-            'imagesEditArticle' => $imagesEditArticle,
             'optionCategories' => $this->optionCategories
         ];
 
@@ -87,15 +87,14 @@ class AdminController extends Controller
     public function storeArticle(Request $request) 
     {
 
-        $this->validate($request,
-             [ 'title' => 'required|min:3',
-                'description' => 'required|min:3',
-                'image' => 'required|',
-                'text' => 'required|min:3'
-             ]);
+        $data = $request->validate ([
+            'title' => 'required|min:3',
+            'description' => 'required|min:3',
+            'image' => 'required|',
+            'text' => 'required|min:3'
+        ]);
 
-        $data = $request->all();
-        $fileName = Image::store($file);
+        //$fileName = Image::store($file);
         $mainFoto = 'm_' . rand(1, 999999) . time() . '.' . $data['image']->getClientOriginalExtension();
         $data['image']->move(public_path('/storage/images/'), $mainFoto);
         $data['image'] = $mainFoto;
@@ -132,13 +131,14 @@ class AdminController extends Controller
     public function updateArticle(Request $request)
     {
 
-        $this->validate($request,
-             [ 'title' => 'required|min:3',
-                'description' => 'required|min:3',
-                'text' => 'required|min:3',
-             ]);
+        $dataValidate = $request->validate ([
+            'title' => 'required|min:3',
+            'description' => 'required|min:3',
+            'text' => 'required|min:3'
+        ]);
 
-        $data = $request->except('_token');
+        $data = $request->except('_token', 'title', 'description', 'text');
+        $data = array_merge($dataValidate, $data);
 
         if (empty($data['image'])) {
 
@@ -163,28 +163,28 @@ class AdminController extends Controller
                 $filesNames[] = ['name' => $fileName];
                 $file->move(public_path('/storage/images/'), $fileName);
             }
-        } 
+        }
+
         unset($data['images']);
 
         $idEditArticle = $data['id'];
 
-            Article::where('id', $idEditArticle)->update($data);
+        Article::find($idEditArticle)->update($data);
 
-                if (!empty($filesNames)) {
+        if (!empty($filesNames)) {
 
-                    foreach ($filesNames as $fileName) {
+            foreach ($filesNames as $fileName) {
 
-                        $idImage[] = Image::insertGetId($fileName);
+                $idImage[] = Image::insertGetId($fileName);
 
-                    }
+            }
 
-                    $article = Article::find($idEditArticle)->images()->attach($idImage);
-                }
+            $article = Article::find($idEditArticle)->images()->attach($idImage);
+        }
 
-            return redirect('/admin');
+        return redirect('/admin');
 
     }
-
 
     public function createArticle()
     {
@@ -200,7 +200,7 @@ class AdminController extends Controller
         $this->outTree($listcategories, 0, 0);
 
         $data = [
-                'optionCategories' => trim($this->optionCategories)
+                'optionCategories' => $this->optionCategories
                 ];
 
         return view('createArticle')->with($data);
@@ -224,7 +224,7 @@ class AdminController extends Controller
 
         unlink("storage/images/" . $deleteImages->name);
 
-        Image::find($imId)->delete();
+        $deleteImages->delete();
 
         return $this->editArticle($articleId);
   
@@ -235,7 +235,7 @@ class AdminController extends Controller
 
         unlink("storage/images/" . $image);
 
-        Article::where('id', $articleId)->update(['image' => null]);
+        Article::find($articleId)->update(['image' => null]);
 
         return $this->editArticle($articleId);
   
@@ -272,8 +272,7 @@ class AdminController extends Controller
         $data = $request->all(); 
 
         $category = new Category; 
-        $category->fill($data);
-        $category->save();
+        $category->fill($data)->save();
 
         return redirect('/admin');
     }
