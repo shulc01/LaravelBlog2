@@ -66,8 +66,6 @@ class AdminController extends Controller
 
         $tagsEditArticle = $editArticle->tags;
 
-        dump($tagsEditArticle);
-
         $imagesEditArticle = $editArticle->images;
 
         $categories = Category::all()->toArray();
@@ -91,8 +89,6 @@ class AdminController extends Controller
         ];
 
         if (collect($tagsEditArticle)->isNotEmpty()) {
-
-            dump(5555);
 
             $tagsArticle = '';
 
