@@ -20,7 +20,7 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('adminShow')->with('allArticles', $articles);
+        return view('layouts.admin.adminShow')->with('allArticles', $articles);
     }
 
     public function outTree($listCategories, $parent_id, $level, $categoryIdArticle = false)
@@ -81,7 +81,7 @@ class AdminController extends Controller
             'optionCategories' => $this->optionCategories
         ];
 
-        return view('editArticle')->with($data);
+        return view('layouts.admin.editArticle')->with($data);
     }
 
     public function storeArticle(Request $request) 
@@ -170,7 +170,7 @@ class AdminController extends Controller
                 'optionCategories' => $this->optionCategories
                 ];
 
-        return view('createArticle')->with($data);
+        return view('layouts.admin.createArticle')->with($data);
     }
 
     public function deleteArticle($id)
@@ -223,7 +223,7 @@ class AdminController extends Controller
 
         $data = ['allCategories' => $this->optionCategories];
 
-        return view('add-cat')->with($data);
+        return view('layouts.admin.createCategory')->with($data);
 
     }
 

@@ -40,7 +40,7 @@
                 <li><a href = "{{ route('ShowAllCategories') }}" target="_blank">All categories</a>
                     <ul class = "submenu">
 
-                        {!! strip_tags($allCategories, '<a><h><br/><li>') !!}
+                        {{--{!! strip_tags($allCategories, '<a><h><br/><li>') !!}--}}
                     
                     </ul>
                 </li>

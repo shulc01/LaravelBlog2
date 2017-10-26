@@ -7,18 +7,20 @@ use App\Models\Article;
 
 class ParseXMLController extends Controller
 {
-    public function index($idParseContent) {
+    public static function index($idParseContent = false) {
 
-    	switch ($idParseContent) {
 
-    		case 1:
-    			$url = 'http://news.liga.net/sport/rss.xml';
-    			break;
-    		case 2:
-    			$url = 'https://www.rbc.ua/static/rss/ukrnet.sport.rus.rss.xml';
-    			break;
-
-    	}
+//    	switch ($idParseContent) {
+//
+//    		case 1:
+//    			$url = 'http://news.liga.net/sport/rss.xml';
+//    			break;
+//    		case 2:
+//    			$url = 'https://www.rbc.ua/static/rss/ukrnet.sport.rus.rss.xml';
+//    			break;
+//
+//    	}
+        $url = 'http://news.liga.net/sport/rss.xml';
 
     	$xml = simplexml_load_file($url);
 

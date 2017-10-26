@@ -25,12 +25,50 @@ class FrontController extends Controller
             $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
 
         }
+        //dump($categories);
+        //$categories->mapWithKeys (function ($item, $key) {
 
-        $this->outTree($listCategories, 0, 0);
+//dump($item->parent_id);
+            //dump($key);
+            //if ($item->parent_id == $item->id) {
+
+            //return   [$item[$item->parent_id] => [$item->id]];
+
+            //}
+
+           // return $list;
+//dump($list);
+
+//dump($categories);
+            /*foreach($categories as $category) {
+dump($category);
+                $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
+
+            }*/
+
+            //return $listCategories;
+
+        //});
+
+        //$t->all();
+        dump($listCategories);
+        //dump($categories->all());
+        //dump($t);
+//dd(2);
+
+        //dd($r->all());
+
+//        foreach ($categories as $category) {
+//
+//            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
+//
+//        }
+
+        //$this->outTree($listCategories, 0, 0);
 
         $data = [
             'lastArticles' => $lastArticles,
-            'allCategories' => $this->optionCategories,
+            'listCategories' => $listCategories,
         ];
 
         View::share($data);
@@ -56,7 +94,7 @@ class FrontController extends Controller
 
                 $level++;
                     
-                $this->outTree($listCategories, $value[0], $level);
+                //$this->outTree($listCategories, $value[0], $level);
 
                 $level--; 
 
@@ -69,7 +107,7 @@ class FrontController extends Controller
 
         $articles = Article::all()->sortByDesc('updated_at');
 
-        return view('allArticles')->with('articles', $articles);
+        return view('layouts.front.allArticles')->with('articles', $articles);
 
     }
 
@@ -80,14 +118,14 @@ class FrontController extends Controller
         $article->category;
         $article->images;
 
-        return view('showArticle')->with('article', $article);
+        return view('layouts.front.showArticle')->with('article', $article);
 
     }
 
     public function showCategories()
     {
 
-        return view('showCategories');
+        return view('layouts.front.showCategories');
 
     }
 
@@ -106,7 +144,7 @@ class FrontController extends Controller
             'articles' => $articles
         ];
 
-        return view('allArticles')->with($data);
+        return view('layouts.front.allArticles')->with($data);
 
     }
 
