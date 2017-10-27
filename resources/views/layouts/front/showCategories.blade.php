@@ -2,36 +2,9 @@
 
 @section('content2')
 
-    @php
+    {{ dd(function_exists('outTree')) }}
 
-    function outTree($listCategories, $parent_id, $level)
-    {
-
-        if (isset($listCategories[$parent_id])) {
-
-            foreach ($listCategories[$parent_id] as $value) {
-
-                echo  '<li><a href = /category/' . $value[0] . ' ><h' . ($level + 2) .'>';
-
-            for ($i = 0; $i <= $level; $i++) {
-
-                echo '- ';
-
-            }
-
-            echo $value[1] . '</h' . ($level + 2) .'></a></li>';
-
-            $level++;
-
-            outTree($listCategories, $value[0], $level);
-
-            $level--;
-
-            }
-        }
-    }
-
-    @endphp
+    @include('layouts.front.frontTree')
 
     <div class = "cat">
 

@@ -2,6 +2,8 @@
 
 @section('admin-content')
 
+    @include('layouts.admin.adminTree')
+
     <h2 class = "cat_title">Create Article</h2>
 
 <div class = "admin">
@@ -32,7 +34,7 @@
 
         <select name = "category_id">
 
-            {!! $optionCategories !!}
+            {{ outTree($listCategories, 0, 0) }}
 
         </select><br/><br/>
 

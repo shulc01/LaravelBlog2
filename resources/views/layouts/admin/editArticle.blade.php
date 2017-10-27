@@ -2,80 +2,82 @@
 
 @section('admin-content')
 
-    <h2 class = "cat_title">Edit Article</h2>
+@include('layouts.admin.adminTree')
 
-<div class = "admin">
+<h2 class = "cat_title">Edit Article</h2>
 
-    <form action = "{{ route('UpdateArticle') }}" enctype="multipart/form-data" method = "POST">
+    <div class = "admin">
 
-        <b>Title*</b><br/>
+        <form action = "{{ route('UpdateArticle') }}" enctype="multipart/form-data" method = "POST">
 
-            <input class = "input-mini " size = "100" type="text" name="title" value="{{ $article->title }}" /><br/><br/>
+            <b>Title*</b><br/>
 
-        <b>Description*</b><br/>
+                <input class = "input-mini " size = "100" type="text" name="title" value="{{ $article->title }}" /><br/><br/>
 
-            <input type="text" size = "100" name="description" value="{{ $article->description }}" /><br/><br/>
+            <b>Description*</b><br/>
 
-        <b>Text*</b><br/>
+                <input type="text" size = "100" name="description" value="{{ $article->description }}" /><br/><br/>
 
-            <textarea name = "text" rows = "4" cols = "77">{{ $article->text }}</textarea><br/><br/>
+            <b>Text*</b><br/>
 
-        <b>Main foto*</b><br/>
+                <textarea name = "text" rows = "4" cols = "77">{{ $article->text }}</textarea><br/><br/>
 
-            <input type = "file" accept="image" name = "image" /><br/><br/>
+            <b>Main foto*</b><br/>
 
-        @if (!empty($article->image))
+                <input type = "file" accept="image" name = "image" /><br/><br/>
 
-            @if (substr($article->image, 0, 4) == 'http')
+            @if (!empty($article->image))
 
-              <!--   <a href = "{{ route('DeleteMainFotoArticle', [$article->image,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $article->image }}?') ? true : false;" >X</a> -->
+                @if (substr($article->image, 0, 4) == 'http')
 
-                <img src = '{{ $article->image }}' alt = "{{ $article->image }}" width = "100" height = "100" border = "2"/><br/></br/>
+                    <a href = "{{ route('DeleteMainFotoArticle', [$article->image,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $article->image }}?') ? true : false;" >X</a>
 
-            @else
+                    <img src = '{{ $article->image }}' alt = "{{ $article->image }}" width = "100" height = "100" border = "2"/><br/></br/>
 
-                <a href = "{{ route('DeleteMainFotoArticle', [$article->image,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $article->image }}?') ? true : false;" >X</a>
+                @else
 
-                <img src = '{{ asset("/storage/images/". "$article->image") }}' alt = "{{ $article->image }}" width = "100" height = "100" border = "2"/><br/></br/>
+                    <a href = "{{ route('DeleteMainFotoArticle', [$article->image,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $article->image }}?') ? true : false;" >X</a>
+
+                    <img src = '{{ asset("/storage/images/". "$article->image") }}' alt = "{{ $article->image }}" width = "100" height = "100" border = "2"/><br/></br/>
+
+                @endif
 
             @endif
 
-        @endif
+            <b>Upload Images</b><br/>
 
-        <b>Upload Images</b><br/>
+            <input type = "file" multiple = "multiple" accept="image" name = "images[]"  /><br/><br/>
 
-        <input type = "file" multiple = "multiple" accept="image" name = "images[]"  /><br/><br/>
+            @forelse ($article->images as $image)
 
-        @forelse ($article->images as $image)
+                <a href = "{{ route('DeleteImagesArticle', [$image->id,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $image->name }}?') ? true : false;" >X</a>
 
-            <a href = "{{ route('DeleteImagesArticle', [$image->id,  $article->id]) }}" onclick = "return confirm('Are you sure want to delete image {{ $image->name }}?') ? true : false;" >X</a>
+                <img src = '{{ asset("/storage/images/". "$image->name") }}' alt = "{{  $image->name }}" width = "100" height = "100" border = "2"/>
 
-            <img src = '{{ asset("/storage/images/". "$image->name") }}' alt = "{{  $image->name }}" width = "100" height = "100" border = "2"/>
+            @empty
 
-        @empty
+                <p>No images</p>
 
-            <p>No images</p>
+            @endforelse
 
-        @endforelse
+            <br/><br/><b>Category*</b><br/>
 
-        <br/><br/><b>Category*</b><br/>
+            <select name = "category_id">
 
-        <select name = "category_id">
+                {{ outTree($listCategories, 0, 0, $article->category->id) }}
 
-            {!! $optionCategories !!}
+            </select><br/><br/>
 
-        </select><br/><br/>
+            <input type="hidden" name = "id" value = "{{ $article->id }}"/>
 
-        <input type="hidden" name = "id" value = "{{ $article->id }}"/>
+            <input type="hidden" name = "mainImage" value = "{{ $article->image }}"/>
 
-        <input type="hidden" name = "mainImage" value = "{{ $article->image }}"/>
+            <input type = "submit" value = "Update"/>
 
-        <input type = "submit" value = "Update"/>
+            {{ csrf_field() }}
 
-        {{ csrf_field() }}
+        </form>
 
-    </form>
-
-</div>
+    </div>
 
 @endsection

@@ -2,6 +2,8 @@
 
 @section('admin-content')
 
+	@include('layouts.admin.adminTree')
+
 	<h1 class = "cat_title">Create category</h1>
 
 	<div class = "admin">
@@ -20,9 +22,9 @@
 
 	        	<select name = "parent_id">
 
-	        		{!! $allCategories !!}
+					{{ outTree($listCategories, 0, 0) }}
 
-	        	</select><br/><br/>
+				</select><br/><br/>
 
 	        <input type = "submit" value = "Save"/>
 

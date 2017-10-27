@@ -32,16 +32,20 @@
             </ul>
         </div>
 
+        @include('layouts.front.frontTree')
+
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('Admin') }}" target="_blank" >Admin</a>
                 </li>
                 <li><a href = "{{ route('ShowAllCategories') }}" target="_blank">All categories</a>
+
+
                     <ul class = "submenu">
 
-                        {{--{!! strip_tags($allCategories, '<a><h><br/><li>') !!}--}}
-                    
+                        {{ outTree($listCategories, 0, 0) }}
+
                     </ul>
                 </li>
                 <li>
@@ -59,7 +63,7 @@
             </div>
 
             <script type='text/javascript'>
-            (function() {var iframe = '<ifr'+'ame src="//old.kurs.com.ua/informer/inf2?color=blue" width="300" height="130" frameborder="0" vspace="0" scrolling="no" hspace="0"></ifr'+'ame>';var container = document.getElementById('kurs-com-ua-informer-main-ukraine-300x130-blue');container.parentNode.innerHTML = iframe;})();
+                (function() {var iframe = '<ifr'+'ame src="//old.kurs.com.ua/informer/inf2?color=blue" width="300" height="130" frameborder="0" vspace="0" scrolling="no" hspace="0"></ifr'+'ame>';var container = document.getElementById('kurs-com-ua-informer-main-ukraine-300x130-blue');container.parentNode.innerHTML = iframe;})();
             </script>
             <noscript><img src='//old.kurs.com.ua/static/images/informer/kurs.png' width='52' height='26' alt='kurs.com.ua: курс валют в Украине!' title='Курс валют' border='0' /></noscript>
 
@@ -67,7 +71,7 @@
 
             <div class="weather">
 
-            <a target="_blank" href="http://nochi.com/weather/kharkiv-19227"><img src="https://w.bookcdn.com/weather/picture/4_19227_1_20_137AE9_160_ffffff_333333_08488D_1_ffffff_333333_0_6.png?scode=124&domid=589&anc_id=16899"  alt="booked.net"/></a>
+                <a target="_blank" href="http://nochi.com/weather/kharkiv-19227"><img src="https://w.bookcdn.com/weather/picture/4_19227_1_20_137AE9_160_ffffff_333333_08488D_1_ffffff_333333_0_6.png?scode=124&domid=589&anc_id=16899"  alt="booked.net"/></a>
 
             </div>
 

@@ -17,51 +17,20 @@ class AdminController extends Controller
     {
 
         $articles = Article::with('category')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->get();
 
         return view('layouts.admin.adminShow')->with('allArticles', $articles);
     }
 
-    public function outTree($listCategories, $parent_id, $level, $categoryIdArticle = false)
-    {
 
-        if (isset($listCategories[$parent_id])) {
- 
-            foreach ($listCategories[$parent_id] as $value) {
-
-               $this->optionCategories .=  '<option value = ' . $value[0];
-
-               if ($value[0] == $categoryIdArticle) {
-
-                    $this->optionCategories .=  ' selected ';
-
-                }
-
-                $this->optionCategories .= '>';
-
-                for ($i = 0; $i <= $level; $i++) {  //?????
-
-                    $this->optionCategories .= ' - ';
-
-                }
-
-                $this->optionCategories .= $value[1]. '</option>';
-
-                $level++;
-                    
-                $this->outTree($listCategories, $value[0], $level, $categoryIdArticle);
-
-                $level--; 
-
-            }
-        }
-    }
 
     public function editArticle($id) 
     {
 
         $article = Article::find($id);
+
+        $article->category;
 
         $article->images;
 
@@ -69,16 +38,13 @@ class AdminController extends Controller
 
         foreach ($categories as $category) {
 
-            $listcategories[$category['parent_id']][] = [$category['id'], $category['name']];
+            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
 
         }
-        
-        $this->outTree($listcategories, 0, 0, $article->category_id);
 
         $data = [
             'article' => $article,
-            'categories' => $categories,
-            'optionCategories' => $this->optionCategories
+            'listCategories'=> $listCategories
         ];
 
         return view('layouts.admin.editArticle')->with($data);
@@ -112,7 +78,6 @@ class AdminController extends Controller
 
             $article->images()->attach($idImage);
         }
-
 
         return redirect('/admin');
 
@@ -160,17 +125,11 @@ class AdminController extends Controller
 
         foreach ($categories as $category) {
 
-            $listcategories[$category['parent_id']][] = [$category['id'], $category['name']];
+            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
 
         }
-        
-        $this->outTree($listcategories, 0, 0);
 
-        $data = [
-                'optionCategories' => $this->optionCategories
-                ];
-
-        return view('layouts.admin.createArticle')->with($data);
+        return view('layouts.admin.createArticle')->with('listCategories', $listCategories);
     }
 
     public function deleteArticle($id)
@@ -218,12 +177,8 @@ class AdminController extends Controller
             $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
 
         }
-        
-        $this->outTree($listCategories, 0, 0);
 
-        $data = ['allCategories' => $this->optionCategories];
-
-        return view('layouts.admin.createCategory')->with($data);
+        return view('layouts.admin.createCategory')->with('listCategories', $listCategories);
 
     }
 
