@@ -16,13 +16,7 @@ class FrontController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        $categories = Category::all()->toArray();
-
-        foreach ($categories as $category) {
-
-            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
-
-        }
+        $listCategories = $this->buildTree();
 
         $data = [
             'lastArticles' => $lastArticles,
@@ -38,7 +32,7 @@ class FrontController extends Controller
 
         $articles = Article::all()->sortByDesc('updated_at');
 
-        return view('layouts.front.allArticles')->with('articles', $articles);
+        return view('front.allArticles')->with('articles', $articles);
 
     }
 
@@ -49,14 +43,16 @@ class FrontController extends Controller
         $article->category;
         $article->images;
 
-        return view('layouts.front.showArticle')->with('article', $article);
+        return view('front.showArticle')->with('article', $article);
 
     }
 
     public function showCategories()
     {
 
-        return view('layouts.front.showCategories');
+        $listCategories = $this->buildTree();
+
+        return view('front.showCategories')->with('listCategories', $listCategories);
 
     }
 
@@ -75,7 +71,7 @@ class FrontController extends Controller
             'articles' => $articles
         ];
 
-        return view('layouts.front.allArticles')->with($data);
+        return view('front.allArticles')->with($data);
 
     }
 
@@ -86,5 +82,19 @@ class FrontController extends Controller
 
         return redirect('/categories');
 
+    }
+
+    public function buildTree()
+    {
+
+        $categories = Category::all()->toArray();
+
+        foreach ($categories as $category) {
+
+            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
+
+        }
+
+        return $listCategories;
     }
 }

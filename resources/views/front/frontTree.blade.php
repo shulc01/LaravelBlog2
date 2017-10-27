@@ -1,6 +1,6 @@
 @php
 
-    function outTree($listCategories, $parent_id, $level)
+    function drawCategoriesTree($listCategories, $parent_id, $level)
     {
 
         if (isset($listCategories[$parent_id])) {
@@ -19,7 +19,7 @@
 
             $level++;
 
-            outTree($listCategories, $value[0], $level);
+            drawCategoriesTree($listCategories, $value[0], $level);
 
             $level--;
 

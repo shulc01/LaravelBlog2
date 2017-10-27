@@ -2,7 +2,7 @@
 
 @section('admin-content')
 
-@include('layouts.admin.adminTree')
+@include('admin.adminTree')
 
 <h2 class = "cat_title">Edit Article</h2>
 
@@ -64,7 +64,7 @@
 
             <select name = "category_id">
 
-                {{ outTree($listCategories, 0, 0, $article->category->id) }}
+                {{ drawCategoriesTree($listCategories, 0, 0, $article->category->id) }}
 
             </select><br/><br/>
 

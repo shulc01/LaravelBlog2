@@ -9,9 +9,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
-{   
-
-    public $optionCategories;
+{
 
     public function index()
     {
@@ -20,7 +18,7 @@ class AdminController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return view('layouts.admin.adminShow')->with('allArticles', $articles);
+        return view('admin.adminShow')->with('allArticles', $articles);
     }
 
 
@@ -34,20 +32,14 @@ class AdminController extends Controller
 
         $article->images;
 
-        $categories = Category::all()->toArray();
-
-        foreach ($categories as $category) {
-
-            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
-
-        }
+        $listCategories = $this->buildTree();
 
         $data = [
             'article' => $article,
             'listCategories'=> $listCategories
         ];
 
-        return view('layouts.admin.editArticle')->with($data);
+        return view('admin.editArticle')->with($data);
     }
 
     public function storeArticle(Request $request) 
@@ -80,7 +72,6 @@ class AdminController extends Controller
         }
 
         return redirect('/admin');
-
     }
 
     public function updateArticle(Request $request)
@@ -115,21 +106,14 @@ class AdminController extends Controller
         }
 
         return redirect('/admin');
-
     }
 
     public function createArticle()
     {
 
-        $categories = Category::all()->toArray();
+        $listCategories = $this->buildTree();
 
-        foreach ($categories as $category) {
-
-            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
-
-        }
-
-        return view('layouts.admin.createArticle')->with('listCategories', $listCategories);
+        return view('admin.createArticle')->with('listCategories', $listCategories);
     }
 
     public function deleteArticle($id)
@@ -138,7 +122,6 @@ class AdminController extends Controller
         Article::find($id)->delete();
 
         return redirect('/admin');
-
     }
 
     public function deleteImagesArticle($imId, $articleId) 
@@ -153,7 +136,6 @@ class AdminController extends Controller
         $deleteImages->delete();
 
         return $this->editArticle($articleId);
-  
     }
 
     public function deleteMainFotoArticle($image, $articleId) 
@@ -164,21 +146,14 @@ class AdminController extends Controller
         Article::find($articleId)->update(['image' => null]);
 
         return $this->editArticle($articleId);
-  
     }
 
     public function createCategory()
     {
 
-        $categories = Category::all()->toArray();
+        $listCategories = $this->buildTree();
 
-        foreach ($categories as $category) {
-
-            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
-
-        }
-
-        return view('layouts.admin.createCategory')->with('listCategories', $listCategories);
+        return view('admin.createCategory')->with('listCategories', $listCategories);
 
     }
 
@@ -197,6 +172,20 @@ class AdminController extends Controller
         $category->fill($data)->save();
 
         return redirect('/admin');
+    }
+
+    public function buildTree()
+    {
+
+        $categories = Category::all()->toArray();
+
+        foreach ($categories as $category) {
+
+            $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
+
+        }
+
+        return $listCategories;
     }
 
 }

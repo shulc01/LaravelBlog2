@@ -32,7 +32,7 @@
             </ul>
         </div>
 
-        @include('layouts.front.frontTree')
+        @include('front.frontTree')
 
         <div class="navbar-nav-scroll">
             <ul class="navbar-nav">
@@ -44,7 +44,7 @@
 
                     <ul class = "submenu">
 
-                        {{ outTree($listCategories, 0, 0) }}
+                        {{ drawCategoriesTree($listCategories, 0, 0) }}
 
                     </ul>
                 </li>
