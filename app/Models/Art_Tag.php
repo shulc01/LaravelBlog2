@@ -12,24 +12,4 @@ class Art_Tag extends Model
 
     public $timestamps = false;
 
-    /*public function category() {
-
-    	// return $this->belongsTo('App\Models\Category');
-
-    	return $this->belongsTo('App\Models\Category');
-
-    }
-*//*
-    public function tags()
-    {
-
-    	return $this->belongsToMany('App\Models\Tag');
-
-    }*/
-
-    public function tags_articles() {
-
-    	//return $this->belongsToMany('App\Models\Article', '', 'article_id', 'id');
-
-    }
 }
