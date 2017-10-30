@@ -84,7 +84,7 @@ class FrontController extends Controller
 
     }
 
-    public function buildTree()
+    protected function buildTree()
     {
 
         $categories = Category::all()->toArray();
