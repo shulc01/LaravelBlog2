@@ -174,7 +174,7 @@ class AdminController extends Controller
         return redirect('/admin');
     }
 
-    public function buildTree()
+    protected function buildTree()
     {
 
         $categories = Category::all()->toArray();
