@@ -13,7 +13,7 @@ class CreateArticlesTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('articles_tags', function (Blueprint $table) {
+        Schema::create('article_tags', function (Blueprint $table) {
 
             $table->increments('id');
          

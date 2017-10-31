@@ -32,7 +32,7 @@
 
         <b>Category*</b><br/>
 
-        <select name = "category_id">
+        <select name = "category_id" class = "input-sm">
 
             {{ drawCategoriesTree($listCategories, 0, 0) }}
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Article_Image;
 use App\Models\Category;
 use App\Models\Image;
 use Illuminate\Http\Request;
@@ -13,7 +12,6 @@ class AdminController extends Controller
 
     public function index()
     {
-
         $articles = Article::with('category')
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -21,16 +19,10 @@ class AdminController extends Controller
         return view('admin.adminShow')->with('allArticles', $articles);
     }
 
-
-
     public function editArticle($id) 
     {
-
-        $article = Article::find($id);
-
-        $article->category;
-
-        $article->images;
+        $article = Article::with('Category', 'Images')
+            ->find($id);
 
         $listCategories = $this->buildTree();
 
@@ -44,7 +36,6 @@ class AdminController extends Controller
 
     public function storeArticle(Request $request) 
     {
-
         $this->validate($request, [
             'title' => 'required|min:3',
             'description' => 'required|min:3',
@@ -56,18 +47,19 @@ class AdminController extends Controller
 
         $data['image'] = Image::store($data['image']);
 
+        $data['content'] = [
+            "description" => $data['description'],
+            "body" => $data['text']
+        ];
+
         $article = Article::create($data);
 
         if (!empty($data['images'])) {
 
             foreach ($data['images'] as $image) {
-
                 $fileName = ['name' => Image::store($image)];
-
                 $idImage[] = Image::insertGetId($fileName);
-
             }
-
             $article->images()->attach($idImage);
         }
 
@@ -76,7 +68,6 @@ class AdminController extends Controller
 
     public function updateArticle(Request $request)
     {
-
         $dataValidate = $request->validate ([
             'title' => 'required|min:3',
             'description' => 'required|min:3',
@@ -86,20 +77,21 @@ class AdminController extends Controller
         $data = $request->except('_token', 'title', 'description', 'text');
         $data = array_merge($dataValidate, $data);
 
+        $data['content'] = [
+            "description" => $data['description'],
+            "body" => $data['text']
+        ];
+
         empty($data['image']) ? $data['image'] = $data['mainImage'] : $data['image'] = Image::store($data['image']);
 
         $articleId = $data['id'];
-
         Article::find($articleId)->update($data);
 
         if (!empty($data['images'])) {
 
             foreach ($data['images'] as $image) {
-
                 $fileName = ['name' => Image::store($image)];
-
                 $idImage[] = Image::insertGetId($fileName);
-
             }
 
             Article::find($articleId)->images()->attach($idImage);
@@ -110,7 +102,6 @@ class AdminController extends Controller
 
     public function createArticle()
     {
-
         $listCategories = $this->buildTree();
 
         return view('admin.createArticle')->with('listCategories', $listCategories);
@@ -118,7 +109,6 @@ class AdminController extends Controller
 
     public function deleteArticle($id)
     {
-
         Article::find($id)->delete();
 
         return redirect('/admin');
@@ -126,8 +116,6 @@ class AdminController extends Controller
 
     public function deleteImagesArticle($imId, $articleId) 
     {
-
-        Article_Image::where('image_id', $imId)->delete();
 
         $deleteImages = Image::find($imId);
 
@@ -140,7 +128,6 @@ class AdminController extends Controller
 
     public function deleteMainFotoArticle($image, $articleId) 
     {
-
         unlink("storage/images/" . $image);
 
         Article::find($articleId)->update(['image' => null]);
@@ -150,7 +137,6 @@ class AdminController extends Controller
 
     public function createCategory()
     {
-
         $listCategories = $this->buildTree();
 
         return view('admin.createCategory')->with('listCategories', $listCategories);
@@ -159,7 +145,6 @@ class AdminController extends Controller
 
     public function saveCategory(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required|min:3',
             'description' => 'required|min:3',
@@ -176,13 +161,10 @@ class AdminController extends Controller
 
     protected function buildTree()
     {
-
-        $categories = Category::all()->toArray();
+        $categories = Category::all();
 
         foreach ($categories as $category) {
-
             $listCategories[$category['parent_id']][] = [$category['id'], $category['name']];
-
         }
 
         return $listCategories;

@@ -16,11 +16,11 @@
 
             <b>Description*</b><br/>
 
-                <input type="text" size = "100" name="description" value="{{ $article->description }}" /><br/><br/>
+                <input type="text" size = "100" name="description" value="{{ $article->content['description'] }}" /><br/><br/>
 
             <b>Text*</b><br/>
 
-                <textarea name = "text" rows = "4" cols = "77">{{ $article->text }}</textarea><br/><br/>
+                <textarea name = "text" rows = "4" cols = "77">{{ $article->content['body'] }}</textarea><br/><br/>
 
             <b>Main foto*</b><br/>
 
@@ -62,7 +62,7 @@
 
             <br/><br/><b>Category*</b><br/>
 
-            <select name = "category_id">
+            <select name = "category_id" class = "input-sm">
 
                 {{ drawCategoriesTree($listCategories, 0, 0, $article->category->id) }}
 
