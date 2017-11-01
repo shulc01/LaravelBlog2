@@ -16,11 +16,11 @@ class CreateCategoriesTable extends Migration
         Schema::enableForeignKeyConstraints();
 
         Schema::create('categories', function (Blueprint $table) {
+
             $table->increments('id');
             $table->string('name', 45);
             $table->text('description');
             $table->integer('parent_id');
-            $table->timestamps();
 
         });
     }

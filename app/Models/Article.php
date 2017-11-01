@@ -24,8 +24,7 @@ class Article extends Model
 
     public function images() {
 
-    	//return $this->belongsToMany('App\Models\Image', 'article_images', 'article_id', 'image_id');
+    	return $this->belongsToMany('App\Models\Image', 'article_images');
 
-        return $this->belongsToMany('App\Models\Image');
     }
 }

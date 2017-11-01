@@ -11,10 +11,10 @@ class Category extends Model
 
     protected $fillable = ['name', 'description', 'parent_id'];
 
-    public function articles() 
+    public function articles()
     {
 
-    	return $this->hasMany('App\Models\Article');	
+        return $this->hasMany('App\Models\Article');
 
     }
 
@@ -25,7 +25,7 @@ class Category extends Model
 
             foreach ($listCategories[$parent_id] as $value) {
 
-                echo  '<li><a href = /category/' . $value[0] . ' ><h' . ($level + 2) .'>';
+                echo '<li><a href = /category/' . $value[0] . ' ><h' . ($level + 2) . '>';
 
                 for ($i = 0; $i <= $level; $i++) {
 
@@ -33,7 +33,7 @@ class Category extends Model
 
                 }
 
-                echo $value[1] . '</h' . ($level + 2) .'></a></li>';
+                echo $value[1] . '</h' . ($level + 2) . '></a></li>';
 
                 $level++;
 

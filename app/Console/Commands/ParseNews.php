@@ -58,20 +58,20 @@ class ParseNews extends Command
 
         for ($i = 0; $i < $countArticle; $i++) {
 
-            $data[$i]['title'] = (string) $xmlChannelItem[$i]->title;
-            $data[$i]['description'] = (string) $xmlChannelItem[$i]->description;
+            $data[$i]['title'] = (string)$xmlChannelItem[$i]->title;
+            $data[$i]['content']['description'] = (string)$xmlChannelItem[$i]->description;
 
             if (!empty ($xml->channel->item[$i]->fulltext)) {
 
-                $data[$i]['text'] = (string) $xmlChannelItem[$i]->fulltext;
+                $data[$i]['content']['body'] = (string)$xmlChannelItem[$i]->fulltext;
 
             } else {
 
-                $data[$i]['text'] = (string) $xmlChannelItem[$i]->link;
+                $data[$i]['content']['body'] = (string)$xmlChannelItem[$i]->link;
             }
 
-            $data[$i]['image'] = (string) $xmlChannelItem[$i]->enclosure['url'];
-            $data[$i]['updated_at'] = date_format(  date_create((string) $xmlChannelItem[$i]->pubDate), 'Y-m-d H:i:s');
+            $data[$i]['image'] = (string)$xmlChannelItem[$i]->enclosure['url'];
+            $data[$i]['updated_at'] = date_format(date_create((string)$xmlChannelItem[$i]->pubDate), 'Y-m-d H:i:s');
 
         }
 

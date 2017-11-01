@@ -4,30 +4,20 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticlesTable extends Migration
+class CreateArticleImagesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-
     public function up()
     {
-
-        Schema::create('articles', function (Blueprint $table) {
-
+        Schema::create('article_images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->json('content');
-            $table->string('image', 150);
-            $table->integer('category_id')->unsigned();
-            
-            $table->timestamps();
-
+            $table->integer('article_id');
+            $table->integer('image_id')->unsigned();
         });
-
-
     }
 
     /**
@@ -37,6 +27,6 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('article_images');
     }
 }
